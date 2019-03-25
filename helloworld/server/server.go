@@ -7,8 +7,11 @@ import (
 	"flag"
 
 	pb "github.com/gavinzhou/hello-grpc/helloworld/pb"
+	healthpb "google.golang.org/grpc/health/grpc_health_v1"
+
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/health"
 	"google.golang.org/grpc/reflection"
 )
 
@@ -30,6 +33,11 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
+
+	hsrv := health.NewServer()
+	hsrv.SetServingStatus("", healthpb.HealthCheckResponse_SERVING)
+	healthpb.RegisterHealthServer(s, hsrv)
+
 	pb.RegisterGreeterServer(s, &server{})
 
 	reflection.Register(s)
