@@ -17,7 +17,6 @@ var (
 func main() {
 	flag.Parse()
 
-	// 连接服务器
 	conn, err := grpc.Dial(*address, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("faild to connect: %v", err)
